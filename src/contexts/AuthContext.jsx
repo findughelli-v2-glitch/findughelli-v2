@@ -9,7 +9,15 @@ import {
   onAuthStateChanged
 } from "firebase/auth"
 
-import { auth } from "../firebase/firebase"
+import {
+  doc,
+  getDoc
+} from "firebase/firestore"
+
+import {
+  auth,
+  db
+} from "../firebase/firebase"
 
 const AuthContext = createContext()
 
@@ -17,32 +25,72 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(null)
 
+  const [role, setRole] = useState(null)
+
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
 
     const unsubscribe =
-      onAuthStateChanged(auth, (currentUser) => {
+      onAuthStateChanged(
+        auth,
+        async (currentUser) => {
 
-        setUser(currentUser)
+          if (currentUser) {
 
-        setLoading(false)
+            const docRef =
+              doc(
+                db,
+                "users",
+                currentUser.uid
+              )
 
-      })
+            const docSnap =
+              await getDoc(docRef)
+
+            if (docSnap.exists()) {
+
+              setRole(docSnap.data().role)
+
+            }
+
+            setUser(currentUser)
+
+          } else {
+
+            setUser(null)
+
+            setRole(null)
+
+          }
+
+          setLoading(false)
+
+        }
+      )
 
     return unsubscribe
 
   }, [])
 
   return (
+
     <AuthContext.Provider
-      value={{ user }}
+      value={{
+        user,
+        role,
+      }}
     >
+
       {!loading && children}
+
     </AuthContext.Provider>
+
   )
 }
 
 export function useAuth() {
+
   return useContext(AuthContext)
+
 }

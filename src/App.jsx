@@ -14,7 +14,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import AddBusiness from "./pages/AddBusiness"
 import BusinessDetails from "./pages/BusinessDetails"
-
+import ProtectedRoute from "./components/ProtectedRoute"
 import AdminDashboard from "./admin/AdminDashboard"
 
 function App() {
@@ -71,9 +71,16 @@ function App() {
           />
 
           <Route
-            path="admin"
-            element={<AdminDashboard />}
-          />
+  path="admin"
+  element={
+    <ProtectedRoute adminOnly={true}>
+
+      <AdminDashboard />
+
+    </ProtectedRoute>
+  }
+/>
+
 
         </Route>
 
