@@ -15,6 +15,18 @@ function Businesses() {
 
   const [search, setSearch] = useState("")
 
+const [category, setCategory] =
+  useState("")
+
+const [featuredOnly, setFeaturedOnly] =
+  useState(false)
+
+const [premiumOnly, setPremiumOnly] =
+  useState(false)
+
+const [sortBy, setSortBy] =
+  useState("newest")
+
   useEffect(() => {
 
     const fetchVendors = async () => {
@@ -119,6 +131,94 @@ setVendors(vendorsData)
                     <h2 className="text-2xl font-bold">
                       {vendor.name}
                     </h2>
+
+<div className="grid md:grid-cols-4 gap-4 mb-8">
+
+  <select
+    className="border p-3 rounded"
+    onChange={(e) =>
+      setCategory(e.target.value)
+    }
+  >
+
+    <option value="">
+      All Categories
+    </option>
+
+    <option value="Restaurant">
+      Restaurant
+    </option>
+
+    <option value="Hotel">
+      Hotel
+    </option>
+
+    <option value="Fashion">
+      Fashion
+    </option>
+
+    <option value="Hospital">
+      Hospital
+    </option>
+
+    <option value="Mechanic">
+      Mechanic
+    </option>
+
+  </select>
+
+  <select
+    className="border p-3 rounded"
+    onChange={(e) =>
+      setSortBy(e.target.value)
+    }
+  >
+
+    <option value="newest">
+      Newest
+    </option>
+
+    <option value="rating">
+      Highest Rated
+    </option>
+
+    <option value="views">
+      Most Viewed
+    </option>
+
+  </select>
+
+  <label className="flex items-center gap-2">
+
+    <input
+      type="checkbox"
+      onChange={(e) =>
+        setFeaturedOnly(
+          e.target.checked
+        )
+      }
+    />
+
+    Featured Only
+
+  </label>
+
+  <label className="flex items-center gap-2">
+
+    <input
+      type="checkbox"
+      onChange={(e) =>
+        setPremiumOnly(
+          e.target.checked
+        )
+      }
+    />
+
+    Premium Only
+
+  </label>
+
+</div>
 
 {vendor.featured && (
 
